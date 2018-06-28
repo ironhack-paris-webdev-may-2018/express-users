@@ -10,6 +10,9 @@ const logger       = require('morgan');
 const path         = require('path');
 const session      = require('express-session');
 const MongoStore   = require('connect-mongo')(session);
+const flash        = require('connect-flash');
+
+const passportSetup = require("./passport/setup.js");
 
 
 mongoose.Promise = Promise;
@@ -41,6 +44,7 @@ app.use(require('node-sass-middleware')({
 }));
 
 
+hbs.registerPartials(__dirname + '/views/partials');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -51,7 +55,10 @@ app.use(session({
   resave: true,
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
+app.use(flash());
 
+// this must come after session setup
+passportSetup(app);
 
 
 // default value for title local
