@@ -18,7 +18,15 @@ const userSchema = new Schema({
     default: "normal",
     required: true
   },
-  encryptedPassword: { type: String, required: true }
+
+  // only for users who signed up normally
+  encryptedPassword: { type: String },
+
+  // only for users who log in with Google
+  googleID: { type: String },
+
+  // only for users who log in with GitHub
+  githubID: { type: String }
 }, {
   // additional settings for the schema here
   timestamps: true

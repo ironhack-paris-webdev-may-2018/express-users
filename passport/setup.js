@@ -2,6 +2,10 @@ const passport = require("passport");
 
 const User = require("../models/user-model.js");
 
+// Run the code inside these files
+require("./google-strategy.js");
+require("./github-strategy.js");
+
 
 // serialize: saving user data in the session
 // (happens when you log in)

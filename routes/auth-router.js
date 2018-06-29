@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const User = require("../models/user-model.js");
 
@@ -86,6 +87,33 @@ router.get("/logout", (req, res, next) => {
   req.flash("success", "Logged out successfully!");
   res.redirect("/");
 });
+
+// Link to "/google/login" to start the log in with Google process
+router.get("/google/login",
+  passport.authenticate("google", {
+    scope: [
+      "https://www.googleapis.com/auth/plus.login",
+      "https://www.googleapis.com/auth/plus.profile.emails.read"
+    ]
+  }));
+router.get("/google/success",
+  passport.authenticate("google", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    successFlash: "Google log in success!",
+    failureFlash: "Google log in failure. 💩"
+  }));
+
+
+// Link to "/github/login" to start the log in with GitHub process
+router.get("/github/login", passport.authenticate("github"));
+router.get("/github/success",
+  passport.authenticate("github", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    successFlash: "GitHub log in success!",
+    failureFlash: "GitHub log in failure. 💩"
+  }));
 
 
 module.exports = router;
