@@ -6,8 +6,8 @@ const User = require("../models/user-model.js");
 
 passport.use(new GithubStrategy({
   // settings for the strategy
-  clientID: "blah",
-  clientSecret: "blah",
+  clientID: process.env.github_id,
+  clientSecret: process.env.github_secret,
   callbackURL: "/github/success",
   proxy: true  // need this for production version to work 🤷‍
 }, (accessToken, refreshToken, profile, done) => {
