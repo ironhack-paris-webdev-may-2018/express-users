@@ -73,5 +73,13 @@ app.use('/', index);
 const authRouter = require("./routes/auth-router.js");
 app.use("/", authRouter);
 
+// Connect "room-router.js" to your app
+const roomRouter = require("./routes/room-router.js");
+app.use("/", roomRouter);
+
+// Connect "room-router.js" to your app
+const adminRouter = require("./routes/admin-router.js");
+app.use("/", adminRouter);
+
 
 module.exports = app;

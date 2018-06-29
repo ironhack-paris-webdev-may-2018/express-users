@@ -13,8 +13,16 @@
 
         {{#if blahUser}}
           <strong>{{blahUser.email}}</strong>
+          <a href="/my-rooms">My Rooms</a>
+          <a href="/room/add">Add a Room</a>
           <a href="/settings">User Settings</a>
           <a href="/logout">Log Out</a>
+
+          {{#if blahUser.isAdmin}}
+            <!-- "isAdmin" is a virtual (fake) property defined in the model -->
+            <h3>Admin Zone</h3>
+            <a href="/admin/users">User Management</a>
+          {{/if}}
         {{else}}
           <a href="/signup">Sign Up</a>
           <a href="/login">Log In</a>

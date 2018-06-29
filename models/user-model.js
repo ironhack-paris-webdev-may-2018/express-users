@@ -12,10 +12,22 @@ const userSchema = new Schema({
     unique: true,
     match: /^.+@.+\..+$/
   },
+  role: {
+    type: String,
+    enum: [ "normal", "admin" ],
+    default: "normal",
+    required: true
+  },
   encryptedPassword: { type: String, required: true }
 }, {
   // additional settings for the schema here
   timestamps: true
+});
+
+// define the "isAdmin" virtual property
+// CAN'T be an arrow function because it uses "this"
+userSchema.virtual("isAdmin").get(function () {
+  return this.role === "admin";
 });
 
 const User = mongoose.model("User", userSchema);
