@@ -16,32 +16,37 @@ passport.use(new GithubStrategy({
 
   const { id, username, displayName, emails } = profile;
 
-  User.findOne({ githubID: id })
-    .then((userDoc) => {
-      if (userDoc) {
-        // if we found a user, they already signed up so just log them in.
+  let email = `${username}@github.com`;
+  if (emails) {
+    email = emails[0].value;
+  }
+
+  User.findOne({
+    $or: [
+      { githubID: id },
+      { email }
+    ]
+  })
+  .then((userDoc) => {
+    if (userDoc) {
+      // if we found a user, they already signed up so just log them in.
+      done(null, userDoc);
+      return;
+    }
+
+    // otherwise create a new user account for them before loggin in
+    let fullName = username;
+    if (displayName) {
+      fullName = displayName;
+    }
+
+    User.create({ githubID: id, fullName, email })
+      .then((userDoc) => {
+        // log in the newly created user account
         done(null, userDoc);
-        return;
-      }
-
-      let fullName = username;
-      let email = `${username}@github.com`;
-
-      // otherwise create a new user account for them before loggin in
-      if (displayName) {
-        fullName = displayName;
-      }
-      if (emails) {
-        email = emails[0].value;
-      }
-
-      User.create({ githubID: id, fullName, email })
-        .then((userDoc) => {
-          // log in the newly created user account
-          done(null, userDoc);
-        })
-    })
-    .catch((err) => {
-      done(err);
-    });
+      })
+  })
+  .catch((err) => {
+    done(err);
+  });
 }));

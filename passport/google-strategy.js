@@ -16,26 +16,31 @@ passport.use(new GoogleStrategy({
 
   const { id, displayName, emails } = profile;
 
-  User.findOne({ googleID: id })
-    .then((userDoc) => {
-      if (userDoc) {
-        // if we found a user, they already signed up so just log them in.
-        done(null, userDoc);
-        return;
-      }
+  User.findOne({
+    $or: [
+      { googleID: id },
+      { email: emails[0].value }
+    ]
+  })
+  .then((userDoc) => {
+    if (userDoc) {
+      // if we found a user, they already signed up so just log them in.
+      done(null, userDoc);
+      return;
+    }
 
-      // otherwise create a new user account for them before loggin in
-      User.create({
-        googleID: id,
-        fullName: displayName,
-        email: emails[0].value
-      })
-      .then((userDoc) => {
-        // log in the newly created user account
-        done(null, userDoc);
-      });
+    // otherwise create a new user account for them before loggin in
+    User.create({
+      googleID: id,
+      fullName: displayName,
+      email: emails[0].value
     })
-    .catch((err) => {
-      done(err);
+    .then((userDoc) => {
+      // log in the newly created user account
+      done(null, userDoc);
     });
+  })
+  .catch((err) => {
+    done(err);
+  });
 }));
