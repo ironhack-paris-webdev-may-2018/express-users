@@ -26,9 +26,11 @@ router.post("/process-room", (req, res, next) => {
     return;
   }
 
-  const { name, description, pictureUrl } = req.body;
+  const { name, description, pictureUrl, latitude, longitude } = req.body;
+  // create the geoJSON structure for our lat and long
+  const location = { coordinates: [ latitude, longitude ] };
 
-  Room.create({ owner: req.user._id, name, description, pictureUrl })
+  Room.create({ owner: req.user._id, name, description, pictureUrl, location })
     .then((roomDoc) => {
       // "req.flash()" is defined by the "connect-flash" package
       req.flash("success", "Room created!");

@@ -12,6 +12,13 @@ const roomSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",  // tells Mongoose that this ID connects to the User model
     required: true
+  },
+  // this is the geoJSON structure: "type" and "coordinates"
+  location: {
+    type: { type: String, default: "Point" },
+    coordinates: [
+      { type: Number }
+    ]
   }
 }, {
   // additional settings for the schema here
