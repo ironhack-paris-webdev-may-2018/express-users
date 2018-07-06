@@ -15,7 +15,10 @@ cloudinary.config({
 const storage =
   cloudinaryStorage({
     cloudinary,
-    folder: "room-pictures"
+    folder: "room-pictures",
+    params: {
+      resource_type: "raw"
+    }
   });
 const uploader = multer({ storage });
 
